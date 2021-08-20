@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <title>Number Guessing Game</title>
+</head>
+
+<body>
+    <h1 class="center">Number Guessing Game</h1>
+
+    <form action="" class="black-white">
+        <div class="divGame frame">
+            <h2 class="center">In how many rounds you think you can guess the number?</h2>
+
+            <div id="divGameSetup" class="divGameSetup">
+
+                <!-- Ordinary game setup -->
+                <p><input type="radio" name="radioTries" id="radioTries4" checked content="hallo"
+                        onchange="radioCustomChecked()">&nbsp;4</p>
+                <p><input type="radio" name="radioTries" id="radioTries5" onchange="radioCustomChecked()">&nbsp;5</p>
+                <p><input type="radio" name="radioTries" id="radioTries6" onchange="radioCustomChecked()">&nbsp;6</p>
+                <p><input type="radio" name="radioTries" id="radioCustom" onchange="radioCustomChecked()">&nbsp;<span
+                        id="lblCustomTries">Custom Game</span></p>
+
+
+                <!-- Extended game setup for the people who want more -->
+                <div id="divGameCustom" class="divGameSetupCustom grid">
+                    <p>Maximum Tries</p>
+                    <input type="number" name="numCustomTries" id="numCustomTries" min="1" max="100" value="10"
+                        placeholder="max rounds">
+                    <p>Maximum Number</p>
+                    <input type="number" name="numCustomValue" id="numCustomMaximum" min="10" value="100"
+                        placeholder="max number">
+                </div>
+
+
+                <!-- Extended game setup for the people who want more -->
+                <input type="button" value="Start Game" onclick="startGame()">
+
+            </div>
+
+            <div id="divGameActive" class="divGameActive center hidden">
+                <p id="gameProgress" class="h1">Try 0 of 10</p>
+                <input type="button" value="Give Up" onclick="surrender()">
+            </div>
+        </div>
+
+        <!--  -->
+        <div id="divGamePlay" class="frame center">
+            <h2>Your Number</h2>
+            <input type="number" name="numGuess" id="numGuess" min="1" max="100" placeholder="Guess"
+                onchange="guessNumber()">
+            <div>
+                <input type="button" value="Try It" onclick="guessNumber()">
+            </div>
+
+
+        </div>
+
+        <!--  -->
+        <div id="divGameHints" class="hidden scroll">
+
+        </div>
+    </form>
+
+    <!--  -->
+    <div id="divGameResult" class="frame hidden">
+
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
