@@ -21,6 +21,8 @@ function debugLog(...expr) {
 // all elements used in JS at one place
 let divGameCustom = document.getElementById("divGameCustom");
 let divGameActive = document.getElementById("divGameActive");
+let divGamePlay = document.getElementById("divGamePlay");
+let divGameHints = document.getElementById("divGameHints");
 
 let radioCustom = document.getElementById("radioCustom");
 let lblCustomTries = document.getElementById("lblCustomTries");
@@ -58,8 +60,6 @@ function initialize() {
 //  -   hide the game setup UI and show the game UI
 function startGame() {
 
-    debugLog("startGame()", "test");
-
     // reset number of tries, ...
     triesCount = 0;
 
@@ -75,9 +75,15 @@ function startGame() {
     // show the game interface and let the game start
 
     // hide the game setup and show the game play section
-    divGameSetup.classList.toggle("hidden");
-    divGameSetup.classList.toggle("grid");
+    divGameSetup.classList.add("hidden");
+    divGameSetup.classList.remove("grid");
 
+    divGameActive.classList.toggle("hidden");
+
+    divGamePlay.classList.remove("hidden");
+    divGamePlay.classList.add("grid");
+
+    divGameHints.classList.toggle("hidden");
 }
 
 
@@ -86,8 +92,25 @@ function startGame() {
 function endGame() {
 
     // hide the game play section and show the game setup
-    divGameSetup.classList.toggle("hidden");
-    divGameSetup.classList.toggle("grid");
+    divGameSetup.classList.remove("hidden");
+    divGameSetup.classList.add("grid");
+
+    divGameActive.classList.toggle("hidden");
+
+    divGamePlay.classList.add("hidden");
+    divGamePlay.classList.remove("grid");
+
+    divGameHints.classList.toggle("hidden");
+}
+
+
+//********************************************************************************************
+// function surrender(): the player surrenders: game stopped, show the game setup user interface
+function surrender() {
+
+
+    // finally call endGame() to show the start screen
+    endGame();
 }
 
 
@@ -99,8 +122,7 @@ function radioCustomChecked() {
     //divGameCustom.style.display = (radioCustom.checked ? "grid" : "none");
     debugLog(radioCustom.checked);
 
-    divGameCustom.classList.toggle("hidden");
-    divGameCustom.classList.toggle("grid");
+    divGameCustom.style.display = (radioCustom.checked ? "grid" : "none");
 }
 
 
@@ -153,8 +175,14 @@ function getRandomNumber(maximum) {
 //  -   option 3: player gives up
 function guessNumber() {
 
+    // check if the number the player entered is with the range from 1 to maxNumber
+
+
     // increase the number of tries
     triesCount++;
+
+    debugVar({ numberToGuess });
+    debugLog("numGuess =", numGuess.value)
 
     // use Math.sign() to compare the number the player entered 
     let gameResult = Math.sign(numGuess.value - numberToGuess);
@@ -164,10 +192,10 @@ function guessNumber() {
             showPlayerWon();
             break;
         case -1: // player's number ist lower than the number to guess
-            showHintLower(numGuess.value);
+            showHintGreater(numGuess.value);
             break;
         case 1: // player's number ist greater than the number to guess
-            showHintGreater(numGuess.value);
+            showHintLower(numGuess.value);
             break;
     }
 
@@ -179,8 +207,30 @@ function guessNumber() {
 
 
 //********************************************************************************************
-function showPlayerWon() { };
-function showPlayerLost() { };
-function showHintLower(number) { };
-function showHintGreater(number) { };
+function showPlayerWon() {
+    showHint(`<h2>You hit the number!</h2>`);
+    alert(`You hit the number!`);
+    //endGame();
 
+};
+function showPlayerLost() {
+    showHint(`You didn't guess the number within ${triesMaximum} tries!`);
+    alert(`You didn't guess the number within ${triesMaximum} tries!`);
+    endGame();
+};
+
+
+
+function showHintLower(number) {
+    showHint(`The secret number is lower than ${number}`);
+};
+
+
+function showHintGreater(number) {
+    showHint(`The secret number is greater than ${number}`);
+};
+
+//********************************************************************************************
+function showHint(text) {
+    divGameHints.innerHTML = `<p>${text}</p>` + divGameHints.innerHTML
+}
