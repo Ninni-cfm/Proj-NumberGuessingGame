@@ -24,16 +24,19 @@ let divGameActive = document.getElementById("divGameActive");
 let divGamePlay = document.getElementById("divGamePlay");
 let divGameHints = document.getElementById("divGameHints");
 
+//------------------------------ game setup elements -----------------------------------
 let radioCustom = document.getElementById("radioCustom");
 let lblCustomTries = document.getElementById("lblCustomTries");
-
 let numCustomTries = document.getElementById("numCustomTries");
 let numCustomMaximum = document.getElementById("numCustomMaximum");
+
+//------------------------------ game play elements ------------------------------------
+let lblGameProgress = document.getElementById("lblGameProgress");
 let numGuess = document.getElementById("numGuess");
 
 
 //********************************************************************************************
-// /consts/variables required for the game
+// consts / variables required for the game
 const defaultMaximum = 100; // the default maximum number to guess
 let maxNumber = 0; // the maximum number to guess
 let triesMaximum = 0; // the maximum number to tries
@@ -74,6 +77,7 @@ function startGame() {
 
     // show the game interface and let the game start
 
+
     // hide the game setup and show the game play section
     divGameSetup.classList.add("hidden");
     divGameSetup.classList.remove("grid");
@@ -84,12 +88,20 @@ function startGame() {
     divGamePlay.classList.add("grid");
 
     divGameHints.classList.toggle("hidden");
+
+    divGameHints.innerHTML = "";
+    numGuess.value = "";
+
+    showGameProgress();
 }
 
 
 //********************************************************************************************
 // function endGame(): the game has ended, show the game setup user interface
-function endGame() {
+async function endGame() {
+
+    // short break before we continue...
+    await Sleep(5000);
 
     // hide the game play section and show the game setup
     divGameSetup.classList.remove("hidden");
@@ -105,22 +117,9 @@ function endGame() {
 
 
 //********************************************************************************************
-// function surrender(): the player surrenders: game stopped, show the game setup user interface
-function surrender() {
-
-
-    // finally call endGame() to show the start screen
-    endGame();
-}
-
-
-//********************************************************************************************
 // if the radio button for custom setup was checked, hide the label and show the input boxes
 // otherwise show the label and hide the input boxes...
 function radioCustomChecked() {
-
-    //divGameCustom.style.display = (radioCustom.checked ? "grid" : "none");
-    debugLog(radioCustom.checked);
 
     divGameCustom.style.display = (radioCustom.checked ? "grid" : "none");
 }
@@ -168,6 +167,14 @@ function getRandomNumber(maximum) {
 
 
 //********************************************************************************************
+// function getRandomNumber(maximum): Get the random number to guess. 
+// Called when the game starts.
+function showGameProgress() {
+    lblGameProgress.innerHTML = `Try ${triesCount + 1} of ${triesMaximum}`;
+}
+
+
+//********************************************************************************************
 // function guessNumber(): the player has entered number
 // 3 possible options for ending the game:
 //  -   option 1: player has guessed the number
@@ -185,18 +192,16 @@ function guessNumber() {
     debugLog("numGuess =", numGuess.value)
 
     // use Math.sign() to compare the number the player entered 
-    let gameResult = Math.sign(numGuess.value - numberToGuess);
-
-    switch (gameResult) {
-        case 0: //player has guessed the number
-            showPlayerWon();
-            break;
-        case -1: // player's number ist lower than the number to guess
-            showHintGreater(numGuess.value);
-            break;
-        case 1: // player's number ist greater than the number to guess
-            showHintLower(numGuess.value);
-            break;
+    // gameResult = 0:  numbers are equal
+    // gameResult = 1:  secret number is greater than user input
+    // gameResult = -1: secret number is lower than user input
+    let gameResult = Math.sign(numberToGuess - numGuess.value);
+    if (gameResult == 0) {
+        showPlayerWon();
+    } else {
+        let str = gameResult > 0 ? "greater" : "lower";
+        showHint(`The secret number is ${str} than ${numGuess.value}!`);
+        showGameProgress();
     }
 
     // number of tries has been reached
@@ -207,30 +212,52 @@ function guessNumber() {
 
 
 //********************************************************************************************
-function showPlayerWon() {
-    showHint(`<h2>You hit the number!</h2>`);
-    alert(`You hit the number!`);
-    //endGame();
+async function showPlayerWon() {
 
-};
-function showPlayerLost() {
-    showHint(`You didn't guess the number within ${triesMaximum} tries!`);
-    alert(`You didn't guess the number within ${triesMaximum} tries!`);
+    showHint(`You hit the number within ${triesCount} ${triesCount > 1 ? 'tries' : 'try'}!`, "h2");
+    showHint('You won!!!', "h1");
+
+    // short break before we continue...
+    await Sleep(5000);
+
+    // finally call endGame() to show the start screen
     endGame();
 };
 
 
+//********************************************************************************************
+function showPlayerLost() {
 
-function showHintLower(number) {
-    showHint(`The secret number is lower than ${number}`);
-};
+    showHint(`You didn't guess the number within ${triesMaximum} tries!`, "h2");
+    showHint('You lost!!!', "h1");
 
-
-function showHintGreater(number) {
-    showHint(`The secret number is greater than ${number}`);
+    // finally call endGame() to show the start screen
+    endGame();
 };
 
 //********************************************************************************************
-function showHint(text) {
-    divGameHints.innerHTML = `<p>${text}</p>` + divGameHints.innerHTML
+// function surrender(): the player surrenders: game stopped, show the game setup user interface
+async function playerSurrenders() {
+
+    showHint('You give up?', "");
+    await Sleep(2000);
+    showHint("LOSER!!!", "h1");
+
+    // finally call endGame() to show the start screen
+    endGame();
+}
+
+//********************************************************************************************
+// function showHint(text, tag = "p"): display text in the game hint area, use tag to 
+function showHint(text, tag = "p") {
+    if (tag.length == 0) {
+        tag = "p";
+    }
+    divGameHints.innerHTML = `<${tag}>${text}</${tag}>` + divGameHints.innerHTML
+
+}
+
+//********************************************************************************************
+function Sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
 }

@@ -34,6 +34,10 @@
     height: 150px;
 }
 
+p {
+    font-size: 1.5rem;
+}
+
 form {
     width: 400px;
     padding: 10px 20px;
@@ -56,6 +60,10 @@ form {
             // display: is set by adding/removing .grid/.hidden in JS to show or hide the element!
             grid-template-columns: 1fr 2fr;
             justify-content: center;
+            input[type="radio"] {
+                margin: 20px;
+                transform: scale(2);
+            }
 
             &Custom {
                 width: auto;
@@ -113,18 +121,6 @@ form {
         @extend .frame;
         @extend .input;
         outline: none;
-        // outline-color: white;
         text-align: right;
-    }
-
-    #divGameSetup {
-        input[type="radio"] {
-            margin: 20px;
-            transform: scale(2);
-        }
-
-        p {
-            font-size: 1.5rem;
-        }
     }
 }
