@@ -8,105 +8,140 @@ html {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.white-black, form input[type=number], form input[type=button]:hover {
-  background: white;
-  color: black;
+body {
+  height: 100vh;
+  background: radial-gradient(#000, #333, #fff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.black-white, form input[type=button] {
-  background: black;
-  color: white;
-}
-
-.frame, form input[type=number], form input[type=button] {
-  border: 2px solid white;
-  border-radius: 5px;
-}
-
-.center {
+h1 {
+  font-size: 2.5rem;
   text-align: center;
 }
 
-.hidden {
-  display: none;
+h2 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+p {
+  font-size: 1.5rem;
 }
 
 .grid {
   display: grid;
 }
 
-.input, form input[type=number], form input[type=button] {
+.flex {
+  display: flex;
+}
+
+.block {
+  display: block;
+}
+
+.collapsed {
+  display: none;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.colors, .game input[type=number], .game .input, .game input[type=button], .game {
+  background: #000;
+  color: #fff;
+}
+
+.frame, .gamePlayMessages, .gamePlayGuess, .gamePlayActive, .game input[type=number], .game .input, .game input[type=button] {
+  border: 0.2rem solid #fff;
+  border-radius: 0.5rem;
+}
+
+.shadow, .game input[type=button]:hover, .game {
+  box-shadow: 0 0 3rem #fff;
+}
+
+.game {
+  width: 500px;
+  border-radius: 1rem;
+  padding: 1%;
+}
+.game h2 {
+  grid-column: 1/3;
+}
+.game .input, .game input[type=number], .game input[type=button] {
   width: 40%;
   padding: 3% 0;
   margin: 2%;
   font-size: 1.5rem;
 }
-
-.scroll {
-  overflow-y: auto;
-  height: 150px;
+.game input[type=button] {
+  transition: all 0.3s;
 }
-
-form {
-  width: 400px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  margin: 15vh auto 0;
+.game input[type=number] {
+  outline: none;
+  text-align: center;
 }
-form .divGame .headline {
-  grid-column: 1/3;
-  font-size: 1.6em;
-}
-form .divGame input[type=button] {
-  grid-column: 1/3;
-  justify-self: center;
-  padding: 5% 0;
-  width: 50%;
-}
-form .divGameSetup {
+.gameSetup {
+  margin: 5%;
+  padding: 5%;
   grid-template-columns: 1fr 2fr;
   justify-content: center;
 }
-form .divGameSetupCustom {
-  width: auto;
-  padding: 20px;
+.gameSetupRadio input {
+  transform: scale(2);
+  margin: 30px 10px 0px 30px;
+}
+.gameSetupCustom {
   grid-column: 1/3;
-  grid-template-columns: 2fr 1fr;
-  justify-items: left;
+  margin: 5% 5% 0;
+  grid-template-columns: auto auto;
+  justify-items: end;
   align-items: center;
 }
-form .divGameSetupCustom input[type=number] {
-  width: 100%;
+.gameSetupCustom input[type=number] {
+  margin-left: 10%;
+  width: 60%;
+  justify-self: start;
 }
-form .divGameActive {
-  text-align: center;
+.gameSetup input[type=button] {
+  grid-column: 1/3;
+  justify-self: center;
+  margin-top: 5%;
+  padding: 5% 0;
+  width: 50%;
 }
-form .divGamePlay {
+.gamePlay {
   grid-template-columns: 1fr 1fr;
   justify-items: center;
 }
-form .divGamePlay > input {
-  padding: 10% 0;
-  width: 90%;
+.gamePlayActive {
+  margin: 5%;
+  padding: 5%;
+  text-align: center;
 }
-form .divGameHints {
-  padding: 0 20px;
+.gamePlayActive p {
+  font-size: 2rem;
+  padding: 5%;
 }
-form > div {
-  margin: 20px 0;
-  padding: 20px;
+.gamePlayGuess {
+  margin: 5%;
+  padding: 5%;
+  justify-content: center;
 }
-form input[type=button] {
-  transition: all 0.3s;
+.gamePlayGuess input {
+  margin-top: 10%;
+  padding: 10% 10%;
 }
-form input[type=number] {
-  outline: none;
-  text-align: right;
+.gamePlayMessages {
+  margin: 5%;
+  padding: 1% 5%;
+  height: calc(1.3rem * 10);
+  overflow-y: auto;
 }
-form #divGameSetup input[type=radio] {
-  margin: 20px;
-  transform: scale(2);
-}
-form #divGameSetup p {
-  font-size: 1.5rem;
+.gamePlayMessages p {
+  font-size: 1.2rem;
 }

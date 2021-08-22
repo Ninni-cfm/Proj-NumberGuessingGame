@@ -13,65 +13,94 @@
 
 <body>
 
-    <form action="" class="black-white">
+    <form class="game white-black">
 
-        <h1 class="center headline">Number Guessing Game</h1>
+        <h1>Number Guessing Game</h1>
 
-        <div class="divGame frame">
+        <!-- *********************************************************************************
+            Game setup area, visible until the game starts
+        -->
+        <section id="gameSetup" class="gameSetup frame grid">
+            <h2>In how many rounds you think you can guess the number?</h2>
 
-            <!--  -->
-            <div id="divGameSetup" class="divGameSetup grid">
-                <h2 class="center headline">In how many rounds you think you can guess the number?</h2>
+            <!-- default game setup -->
+            <p class="gameSetupRadio">
+                <input type="radio" name="radioTries" id="radioTries4" onchange="radioCustomChecked()" checked>
+                &nbsp;4
+            </p>
+            <p class="gameSetupRadio">
+                <input type="radio" name="radioTries" id="radioTries5" onchange="radioCustomChecked()">
+                &nbsp;5
+            </p>
+            <p class="gameSetupRadio">
+                <input type="radio" name="radioTries" id="radioTries6" onchange="radioCustomChecked()">
+                &nbsp;6
+            </p>
+            <p class="gameSetupRadio">
+                <input type="radio" name="radioTries" id="radioCustom" onchange="radioCustomChecked()">
+                &nbsp;<span id="lblCustomTries">Custom Game</span>
+            </p>
 
-                <!-- Ordinary game setup -->
-                <p><input type="radio" name="radioTries" id="radioTries4" onchange="radioCustomChecked()" checked>
-                    &nbsp;4</p>
-                <p><input type="radio" name="radioTries" id="radioTries5" onchange="radioCustomChecked()">
-                    &nbsp;5</p>
-                <p><input type="radio" name="radioTries" id="radioTries6" onchange="radioCustomChecked()">
-                    &nbsp;6</p>
-                <p><input type="radio" name="radioTries" id="radioCustom" onchange="radioCustomChecked()">
-                    &nbsp;<span id="lblCustomTries">Custom Game</span></p>
+            <!--==============================================================================
+                Extended game setup for the people who want more. will only visible if 
+                'radioCustom' is checked
+            -->
+            <div id="gameCustom" class="gameSetupCustom grid">
 
-                <!-- Extended game setup for the people who want more -->
-                <div id="divGameCustom" class="divGameSetupCustom grid">
-                    <p>Maximum Tries</p>
-                    <input type="number" name="numCustomTries" id="numCustomTries" min="1" max="100" value="10"
-                        placeholder="max rounds">
-                    <p>Maximum Number</p>
-                    <input type="number" name="numCustomValue" id="numCustomMaximum" min="10" value="100"
-                        placeholder="max number">
-                </div>
+                <!-- the number fields for max rounds and highest number to guess -->
+                <!-- the onkeypress event prevents decimal numbers -->
+                <p>Maximum Rounds</p>
+                <input type="number" name="numCustomTries" id="numCustomTries" min="1" max="100" value="10"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57">
 
-                <!-- finally the button to start the game -->
-                <input type="button" value="Start Game" onclick="startGame()">
-
+                <p>Maximum Number</p>
+                <input type="number" name="numCustomValue" id="numCustomMaximum" min="10" value="100"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
+            <!-- finally the button to start the game -->
+            <input type="button" value="Start Game" onclick="startGame()">
+        </section>
+
+
+        <!-- *********************************************************************************
+            The gameplay area (where the fun starts). Will not be visible until the player
+            hits the play button!
+        -->
+        <section id="gamePlay" class="gamePlay collapsed">
+
             <!--  -->
-            <div id="divGameActive" class="divGameActive center hidden">
-                <h2 class="center">Game has started! Good luck!</h2>
-                <p id="lblGameProgress" class="h1">Try 0 of 10</p>
+            <div class="gamePlayActive">
+
+                <h2>Game has started!<br>Good luck!</h2>
+
+                <!-- show how many rounds are already played -->
+                <p id="lblGameProgress"></p>
+
+                <!-- a chance for the player to give up a hopeless game -->
                 <input type="button" value="Give Up" onclick="playerSurrenders()">
+
             </div>
-        </div>
 
-        <!--  -->
-        <div id="divGamePlay" class="divGamePlay frame hidden">
-            <input type="number" name="numGuess" id="numGuess" min="1" max="100" placeholder="Number">
-            <input type="button" value="Guess" onclick="guessNumber()">
-        </div>
+            <!-- enter a number and click on 'Guess' -->
+            <div class="gamePlayGuess flex">
 
-        <!--  -->
-        <div id="divGameHints" class="divGameHints frame center scroll hidden">
+                <!-- the onkeypress event prevents decimal numbers -->
+                <input type="number" id="numGuess" name="numGuess" min="1" max="100" placeholder="Number"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57">
 
-        </div>
+                <!-- after player has entered a number hit on 'Guess' to check it -->
+                <input type="button" id="btnGuess" value="Guess" onclick="checkNumber()">
+            </div>
+
+            <!-- Container for showing game messages -->
+            <div id="gameMessages" class="gamePlayMessages"></div>
+
+        </section>
     </form>
 
-    <!--  -->
-    <div id="divGameResult" class="frame hidden">
-
-    </div>
+    <!-- for V2: show extra game result screen -->
+    <!-- <div id="gameResult" class="frame hidden"></div> -->
 
     <script src="assets/js/main.js"></script>
 </body>

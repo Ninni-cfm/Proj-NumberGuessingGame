@@ -19,10 +19,10 @@ function debugLog(...expr) {
 
 //********************************************************************************************
 // all elements used in JS at one place
-let divGameCustom = document.getElementById("divGameCustom");
-let divGameActive = document.getElementById("divGameActive");
-let divGamePlay = document.getElementById("divGamePlay");
-let divGameHints = document.getElementById("divGameHints");
+let gameCustom = document.getElementById("gameCustom");
+let gameActive = document.getElementById("gameActive");
+let gamePlay = document.getElementById("gamePlay");
+let gameMessages = document.getElementById("gameMessages");
 
 //------------------------------ game setup elements -----------------------------------
 let radioCustom = document.getElementById("radioCustom");
@@ -45,14 +45,8 @@ let numberToGuess = 0; // the random number the player has to guess
 
 
 //********************************************************************************************
-// function initialize(): initialize the user interface
-initialize();
-function initialize() {
-
-    radioCustomChecked();
-
-
-}
+// call to radioCustomChecked() to setup the display style for custom game setup
+radioCustomChecked();
 
 
 //********************************************************************************************
@@ -72,27 +66,21 @@ function startGame() {
     // ... and get the maximum number to guess
     maxNumber = getMaximumNumber();
 
+    // set the maximum value for the input number field
+    numGuess.max = maxNumber;
+
     // generate a random number between 1 and maxValue
     numberToGuess = getRandomNumber(maxNumber);
 
-    // show the game interface and let the game start
-
-
     // hide the game setup and show the game play section
-    divGameSetup.classList.add("hidden");
-    divGameSetup.classList.remove("grid");
+    showHideElement(gameSetup, "grid", false);
+    showHideElement(gamePlay, "block", true);
 
-    divGameActive.classList.toggle("hidden");
-
-    divGamePlay.classList.remove("hidden");
-    divGamePlay.classList.add("grid");
-
-    divGameHints.classList.toggle("hidden");
-
-    divGameHints.innerHTML = "";
-    numGuess.value = "";
-
+    // let the game start
     showGameProgress();
+    gameMessages.innerHTML = "";
+    numGuess.value = "";
+    numGuess.focus();
 }
 
 
@@ -101,18 +89,25 @@ function startGame() {
 async function endGame() {
 
     // short break before we continue...
-    await Sleep(5000);
+    await sleep(5000);
 
     // hide the game play section and show the game setup
-    divGameSetup.classList.remove("hidden");
-    divGameSetup.classList.add("grid");
+    showHideElement(gameSetup, "grid", true);
+    showHideElement(gamePlay, "block", false);
+}
 
-    divGameActive.classList.toggle("hidden");
-
-    divGamePlay.classList.add("hidden");
-    divGamePlay.classList.remove("grid");
-
-    divGameHints.classList.toggle("hidden");
+// function showHideElement(element, display, showElement):
+//      element: the element to hide or show
+//      display: the default display style for the element
+//      showElement: if true the element is visible, if false it's collapsed
+function showHideElement(element, display, showElement) {
+    if (showElement) {
+        element.classList.remove("collapsed");
+        element.classList.add(display);
+    } else {
+        element.classList.add("collapsed");
+        element.classList.remove(display);
+    }
 }
 
 
@@ -121,7 +116,7 @@ async function endGame() {
 // otherwise show the label and hide the input boxes...
 function radioCustomChecked() {
 
-    divGameCustom.style.display = (radioCustom.checked ? "grid" : "none");
+    gameCustom.style.display = (radioCustom.checked ? "grid" : "none");
 }
 
 
@@ -170,25 +165,31 @@ function getRandomNumber(maximum) {
 // function getRandomNumber(maximum): Get the random number to guess. 
 // Called when the game starts.
 function showGameProgress() {
+
     lblGameProgress.innerHTML = `Try ${triesCount + 1} of ${triesMaximum}`;
 }
 
 
 //********************************************************************************************
-// function guessNumber(): the player has entered number
+// function checkNumber(): the player has entered a number
 // 3 possible options for ending the game:
 //  -   option 1: player has guessed the number
 //  -   option 2: maximum number of tries has been reached
 //  -   option 3: player gives up
-function guessNumber() {
+function checkNumber() {
+
+    // get the player's number
+    numGuess.value = Number(numGuess.value);
 
     // check if the number the player entered is with the range from 1 to maxNumber
-
+    if (numGuess.value < 1 || numGuess.value > maxNumber.value) {
+        showHint("Invalid number entered", "p")
+        return;
+    }
 
     // increase the number of tries
     triesCount++;
 
-    debugVar({ numberToGuess });
     debugLog("numGuess =", numGuess.value)
 
     // use Math.sign() to compare the number the player entered 
@@ -204,21 +205,23 @@ function guessNumber() {
         showGameProgress();
     }
 
-    // number of tries has been reached
+    // max number of tries has been reached
     if ((triesCount == triesMaximum) && (gameResult != 0)) {
         showPlayerLost();
     }
+
+    // set focus on number field
+    numGuess.value = "";
+    numGuess.focus();
 }
 
 
 //********************************************************************************************
-async function showPlayerWon() {
+// function showPlayerWon(): the player hit the secret number, so he has won...
+function showPlayerWon() {
 
     showHint(`You hit the number within ${triesCount} ${triesCount > 1 ? 'tries' : 'try'}!`, "h2");
     showHint('You won!!!', "h1");
-
-    // short break before we continue...
-    await Sleep(5000);
 
     // finally call endGame() to show the start screen
     endGame();
@@ -226,6 +229,8 @@ async function showPlayerWon() {
 
 
 //********************************************************************************************
+// function showPlayerLost(): the player wasn't able to guess  the secret number, which means:
+// HE LOST!!!
 function showPlayerLost() {
 
     showHint(`You didn't guess the number within ${triesMaximum} tries!`, "h2");
@@ -235,29 +240,44 @@ function showPlayerLost() {
     endGame();
 };
 
+
 //********************************************************************************************
 // function surrender(): the player surrenders: game stopped, show the game setup user interface
 async function playerSurrenders() {
 
-    showHint('You give up?', "");
-    await Sleep(2000);
+    showHint('You give up? Really?', "");
+    await sleep(2000);
     showHint("LOSER!!!", "h1");
 
     // finally call endGame() to show the start screen
     endGame();
 }
 
-//********************************************************************************************
-// function showHint(text, tag = "p"): display text in the game hint area, use tag to 
-function showHint(text, tag = "p") {
-    if (tag.length == 0) {
-        tag = "p";
-    }
-    divGameHints.innerHTML = `<${tag}>${text}</${tag}>` + divGameHints.innerHTML
 
+//********************************************************************************************
+// function showHint(text, tag = "p"): display text in the game hint area, use elementType to
+// use a special element. default is '<p>'
+function showHint(text, elementType = "p") {
+
+    if (elementType.length == 0) {
+        elementType = "p";
+    }
+
+    gameMessages.innerHTML = `<${elementType}>${text}</${elementType}>` + gameMessages.innerHTML
 }
 
+
 //********************************************************************************************
-function Sleep(milliseconds) {
+// function sleep(milliseconds): suspend execution of the javascript code for the given time
+// Important: this function has to be called using await, otherwise the excution of the code
+//            continues immediately. If this function is called within another function use 
+//            async for the calling function!
+// Sample: 
+// async function callingFunction() {
+//     console.log('before sleep()');
+//     await sleep(5000);
+//     console.log('after sleep()');
+// }
+function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }

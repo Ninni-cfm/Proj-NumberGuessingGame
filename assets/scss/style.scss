@@ -1,126 +1,224 @@
+//****************************************************************************
+// Get my favorite defaults ;-)
 @import "imports/defaults";
 
-.white-black {
-    background: white;
-    color: black;
+//****************************************************************************
+// define some colors (easy to change as well)
+$foreColor: #fff;
+$backColor: #000;
+$backColor2: #333;
+
+// for boys...
+// $foreColor: #acd8e6;
+// $backColor: #003;
+// $backColor2: #006;
+
+// for girls...
+// $foreColor: purple;
+// $backColor: violet;
+// $backColor2: #aa52aa;
+
+body {
+    height: 100vh;
+    background: radial-gradient($backColor, $backColor2, $foreColor);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.black-white {
-    background: black;
-    color: white;
-}
-.frame {
-    border: 2px solid white;
-    border-radius: 5px;
-}
-.center {
+
+//****************************************************************************
+// all used font-sizes at one place (easy to change)
+h1 {
+    font-size: 2.5rem;
     text-align: center;
 }
-
-.hidden {
-    display: none;
+h2 {
+    font-size: 2rem;
+    text-align: center;
 }
-.grid {
-    display: grid;
-}
-
-.input {
-    width: 40%;
-    padding: 3% 0;
-    margin: 2%;
-    font-size: 1.5rem;
-}
-.scroll {
-    overflow-y: auto;
-    height: 150px;
-}
-
 p {
     font-size: 1.5rem;
 }
 
-form {
-    width: 400px;
-    padding: 10px 20px;
-    border-radius: 10px;
-    margin: 15vh auto 0;
+//****************************************************************************
+// this section contains some predefined class styles for use with JS
 
-    .divGame {
-        .headline {
-            grid-column: 1 / 3;
-            font-size: 1.6em;
-        }
-        input[type="button"] {
-            grid-column: 1 / 3;
-            justify-self: center;
-            padding: 5% 0;
-            width: 50%;
-        }
+//----------------------------------------------------------------------------
+// some display styles
+.grid {
+    display: grid;
+}
+.flex {
+    display: flex;
+}
+.block {
+    display: block;
+}
 
-        &Setup {
-            // display: is set by adding/removing .grid/.hidden in JS to show or hide the element!
-            grid-template-columns: 1fr 2fr;
-            justify-content: center;
-            input[type="radio"] {
-                margin: 20px;
-                transform: scale(2);
-            }
+//----------------------------------------------------------------------------
+// two ways to hide an element:
+// collapsed is a synonym for 'display: none;', the elemenmt doesn't affect
+// the layout of the page, but is easily made visible using a different
+// property value than 'none' and claiming its normal space on the page.
+.collapsed {
+    display: none;
+}
+// hidden is a synonym for 'visibility: hidden;', the elemenmt is no longer
+// visible on the page, but affects the layout as it would be visible.
+.hidden {
+    visibility: hidden;
+}
 
-            &Custom {
-                width: auto;
-                padding: 20px;
-                grid-column: 1 / 3;
+//********************************************************************************************
+// some classes used for extending styles (instead of mixins)
 
-                // display: is set by adding/removing .grid/.hidden in JS to show or hide the element!
-                grid-template-columns: 2fr 1fr;
-                justify-items: left;
-                align-items: center;
+// set foreground (text) and background colors
+.colors {
+    background: $backColor;
+    color: $foreColor;
+}
+// draw a frame around the element
+.frame {
+    border: 0.2rem solid $foreColor;
+    border-radius: 0.5rem;
+}
+// draw a shadow around the element
+.shadow {
+    box-shadow: 0 0 3rem $foreColor;
+}
 
-                input[type="number"] {
-                    width: 100%;
-                }
-            }
-        }
+//********************************************************************************************
+//  here starts styling of the user interface
+.game {
+    width: 500px;
+    border-radius: 1rem;
+    padding: 1%;
 
-        &Active {
-            text-align: center;
-        }
+    @extend .colors;
+    @extend .shadow;
 
-        &Play {
-            // display: is set by adding/removing .grid/.hidden in JS to show or hide the element!
-            grid-template-columns: 1fr 1fr;
-            justify-items: center;
-
-            > input {
-                padding: 10% 0;
-                width: 90%;
-            }
-        }
-
-        &Hints {
-            padding: 0 20px;
-        }
+    h2 {
+        grid-column: 1 / 3;
     }
 
-    > div {
-        margin: 20px 0;
-        padding: 20px;
+    // style a default input element
+    .input {
+        @extend .colors;
+        @extend .frame;
+        width: 40%;
+        padding: 3% 0;
+        margin: 2%;
+        font-size: 1.5rem;
     }
 
     input[type="button"] {
-        @extend .black-white;
-        @extend .frame;
         @extend .input;
         transition: all 0.3s;
     }
     input[type="button"]:hover {
-        @extend .white-black;
+        @extend .shadow;
     }
 
     input[type="number"] {
-        @extend .white-black;
+        @extend .colors;
         @extend .frame;
         @extend .input;
         outline: none;
-        text-align: right;
+        text-align: center;
+    }
+
+    //****************************************************************************************
+    //  Game setup area
+    &Setup {
+        margin: 5%;
+        padding: 5%;
+
+        // if you're missing display: it's set in JS to show or hide the element!
+        grid-template-columns: 1fr 2fr;
+        justify-content: center;
+
+        // comtainer for radio buttons
+        &Radio {
+            input {
+                // the original radio buttons are to small!
+                transform: scale(2);
+                // And we need a little bit space around...
+                margin: 30px 10px 0px 30px;
+            }
+        }
+
+        // if user selects custom game this area will be made visible by JS
+        &Custom {
+            // use full width
+            grid-column: 1 / 3;
+
+            margin: 5% 5% 0;
+
+            // if you're missing display: it's set in JS to show or hide the element!
+            grid-template-columns: auto auto;
+            justify-items: end;
+            align-items: center;
+
+            // the number fields for max rounds and highest number to guess
+            input[type="number"] {
+                margin-left: 10%;
+                width: 60%;
+                justify-self: start;
+            }
+        }
+
+        // the start button
+        input[type="button"] {
+            grid-column: 1 / 3; // use full width
+            justify-self: center;
+            margin-top: 5%;
+            padding: 5% 0;
+            width: 50%;
+        }
+    }
+
+    &Play {
+        &Active {
+            @extend .frame;
+            margin: 5%;
+            padding: 5%;
+            text-align: center;
+            p {
+                font-size: 2rem;
+                padding: 5%;
+            }
+        }
+
+        // if you're missing display: it's set in JS to show or hide the element!
+        grid-template-columns: 1fr 1fr;
+        justify-items: center;
+
+        // enter a number and click on 'Guess'
+        &Guess {
+            @extend .frame;
+            margin: 5%;
+            padding: 5%;
+
+            justify-content: center;
+            input {
+                margin-top: 10%;
+                padding: 10% 10%;
+            }
+        }
+
+        // area to show game messages
+        &Messages {
+            @extend .frame;
+            margin: 5%;
+            padding: 1% 5%;
+            height: calc(1.3rem * 10);
+
+            // show the vertical scrollbar only if needed
+            overflow-y: auto;
+
+            p {
+                font-size: 1.2rem;
+            }
+        }
     }
 }

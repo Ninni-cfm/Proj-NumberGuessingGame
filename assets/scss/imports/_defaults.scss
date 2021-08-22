@@ -4,9 +4,10 @@
     padding: 0;
 }
 
-// Scrolling should always be smooth...
 html {
+    // Scrolling should always be smooth...
     scroll-behavior: smooth;
 
+    // the default UI font family (at least for Microsoft)
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
