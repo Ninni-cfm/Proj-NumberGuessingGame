@@ -32,7 +32,10 @@ let numCustomMaximum = document.getElementById("numCustomMaximum");
 
 //------------------------------ game play elements ------------------------------------
 let lblGameProgress = document.getElementById("lblGameProgress");
+let lblMaxNumber = document.getElementById("lblMaxNumber");
+
 let numGuess = document.getElementById("numGuess");
+let btnGuess = document.getElementById("btnGuess");
 
 
 //********************************************************************************************
@@ -78,6 +81,10 @@ function startGame() {
 
     // let the game start
     showGameProgress();
+    numGuess.disabled = btnGuess.disabled = false;
+
+    lblMaxNumber.innerHTML = maxNumber;
+
     gameMessages.innerHTML = "";
     numGuess.value = "";
     numGuess.focus();
@@ -88,8 +95,11 @@ function startGame() {
 // function endGame(): the game has ended, show the game setup user interface
 async function endGame() {
 
+    // disable input field and guess button
+    numGuess.disabled = btnGuess.disabled = true;
+
     // short break before we continue...
-    await sleep(5000);
+    await sleep(8000);
 
     // hide the game play section and show the game setup
     showHideElement(gameSetup, "grid", true);
@@ -179,10 +189,10 @@ function showGameProgress() {
 function checkNumber() {
 
     // get the player's number
-    numGuess.value = Number(numGuess.value);
+    let userNumber = Number("0" + numGuess.value);
 
     // check if the number the player entered is with the range from 1 to maxNumber
-    if (numGuess.value < 1 || numGuess.value > maxNumber.value) {
+    if (userNumber < 1 || userNumber > maxNumber) {
         showHint("Invalid number entered", "p")
         return;
     }
@@ -190,18 +200,18 @@ function checkNumber() {
     // increase the number of tries
     triesCount++;
 
-    debugLog("numGuess =", numGuess.value)
+    debugLog("userNumber =", userNumber);
 
     // use Math.sign() to compare the number the player entered 
     // gameResult = 0:  numbers are equal
     // gameResult = 1:  secret number is greater than user input
     // gameResult = -1: secret number is lower than user input
-    let gameResult = Math.sign(numberToGuess - numGuess.value);
+    let gameResult = Math.sign(numberToGuess - userNumber);
     if (gameResult == 0) {
         showPlayerWon();
     } else {
         let str = gameResult > 0 ? "greater" : "lower";
-        showHint(`The secret number is ${str} than ${numGuess.value}!`);
+        showHint(`The secret number is ${str} than ${userNumber}!`);
         showGameProgress();
     }
 

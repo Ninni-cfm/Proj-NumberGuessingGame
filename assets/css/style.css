@@ -55,7 +55,7 @@ p {
   color: #fff;
 }
 
-.frame, .gamePlayMessages, .gamePlayGuess, .gamePlayActive, .game input[type=number], .game .input, .game input[type=button] {
+.frame, .gamePlayMessages, .gamePlayGuess, .gamePlayActive, .gameSetup, .game input[type=number], .game .input, .game input[type=button] {
   border: 0.2rem solid #fff;
   border-radius: 0.5rem;
 }
@@ -114,10 +114,6 @@ p {
   padding: 5% 0;
   width: 50%;
 }
-.gamePlay {
-  grid-template-columns: 1fr 1fr;
-  justify-items: center;
-}
 .gamePlayActive {
   margin: 5%;
   padding: 5%;
@@ -130,11 +126,17 @@ p {
 .gamePlayGuess {
   margin: 5%;
   padding: 5%;
-  justify-content: center;
+  text-align: center;
 }
-.gamePlayGuess input {
+.gamePlayGuessInner {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+.gamePlayGuessInner input {
   margin-top: 10%;
   padding: 10% 10%;
+  width: 80%;
 }
 .gamePlayMessages {
   margin: 5%;

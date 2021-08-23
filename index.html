@@ -13,14 +13,14 @@
 
 <body>
 
-    <form class="game white-black">
+    <form class="game">
 
         <h1>Number Guessing Game</h1>
 
         <!-- *********************************************************************************
             Game setup area, visible until the game starts
         -->
-        <section id="gameSetup" class="gameSetup frame grid">
+        <section id="gameSetup" class="gameSetup grid">
             <h2>In how many rounds you think you can guess the number?</h2>
 
             <!-- default game setup -->
@@ -83,14 +83,17 @@
             </div>
 
             <!-- enter a number and click on 'Guess' -->
-            <div class="gamePlayGuess flex">
+            <div class="gamePlayGuess">
+                <p>Give a number from 1 to <span id="lblMaxNumber"></span>:</p>
+                <div class="gamePlayGuessInner">
 
-                <!-- the onkeypress event prevents decimal numbers -->
-                <input type="number" id="numGuess" name="numGuess" min="1" max="100" placeholder="Number"
-                    onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <!-- the onkeypress event prevents decimal numbers -->
+                    <input type="number" id="numGuess" name="numGuess" min="1" max="100" placeholder="Number"
+                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
 
-                <!-- after player has entered a number hit on 'Guess' to check it -->
-                <input type="button" id="btnGuess" value="Guess" onclick="checkNumber()">
+                    <!-- after player has entered a number hit on 'Guess' to check it -->
+                    <input type="button" id="btnGuess" value="Guess" onclick="checkNumber()">
+                </div>
             </div>
 
             <!-- Container for showing game messages -->

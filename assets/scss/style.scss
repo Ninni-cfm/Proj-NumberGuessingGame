@@ -3,7 +3,7 @@
 @import "imports/defaults";
 
 //****************************************************************************
-// define some colors (easy to change as well)
+// define some colors (easy to change)
 $foreColor: #fff;
 $backColor: #000;
 $backColor2: #333;
@@ -27,7 +27,7 @@ body {
 }
 
 //****************************************************************************
-// all used font-sizes at one place (easy to change)
+// all used font-sizes at one place (easy to change as well)
 h1 {
     font-size: 2.5rem;
     text-align: center;
@@ -130,6 +130,8 @@ p {
     //****************************************************************************************
     //  Game setup area
     &Setup {
+        @extend .frame;
+
         margin: 5%;
         padding: 5%;
 
@@ -178,6 +180,8 @@ p {
     }
 
     &Play {
+        // if you're missing display: it's set in JS to show or hide the element!
+
         &Active {
             @extend .frame;
             margin: 5%;
@@ -189,20 +193,23 @@ p {
             }
         }
 
-        // if you're missing display: it's set in JS to show or hide the element!
-        grid-template-columns: 1fr 1fr;
-        justify-items: center;
-
         // enter a number and click on 'Guess'
         &Guess {
             @extend .frame;
             margin: 5%;
             padding: 5%;
+            text-align: center;
 
-            justify-content: center;
-            input {
-                margin-top: 10%;
-                padding: 10% 10%;
+            &Inner {
+                display: flex;
+                justify-content: center;
+                justify-items: center;
+
+                input {
+                    margin-top: 10%;
+                    padding: 10% 10%;
+                    width: 80%;
+                }
             }
         }
 
